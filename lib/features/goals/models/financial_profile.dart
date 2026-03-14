@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class FinancialProfile {
-  final String name;
   final String mobileNo;
   final double currentAge;
   final double monthlySIP;
@@ -12,7 +11,6 @@ class FinancialProfile {
   final double inflationRate;
 
   const FinancialProfile({
-    required this.name,
     required this.mobileNo,
     required this.currentAge,
     required this.monthlySIP,
@@ -23,7 +21,6 @@ class FinancialProfile {
   });
 
   FinancialProfile copyWith({
-    String? name,
     String? mobileNo,
     double? currentAge,
     double? monthlySIP,
@@ -33,7 +30,6 @@ class FinancialProfile {
     double? inflationRate,
   }) {
     return FinancialProfile(
-      name: name ?? this.name,
       mobileNo: mobileNo ?? this.mobileNo,
       currentAge: currentAge ?? this.currentAge,
       monthlySIP: monthlySIP ?? this.monthlySIP,

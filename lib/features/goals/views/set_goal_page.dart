@@ -20,7 +20,6 @@ class _SetGoalPageState extends ConsumerState<SetGoalPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Financial profile controllers
-  late final TextEditingController _nameCtrl;
   late final TextEditingController _mobileCtrl;
   late final TextEditingController _ageCtrl;
   late final TextEditingController _sipCtrl;
@@ -36,7 +35,6 @@ class _SetGoalPageState extends ConsumerState<SetGoalPage> {
     super.initState();
     final existing = ref.read(goalsProvider);
     final p = existing.profile;
-    _nameCtrl = TextEditingController(text: p?.name ?? '');
     _mobileCtrl = TextEditingController(text: p?.mobileNo ?? '');
     _ageCtrl = TextEditingController(
         text: p != null ? p.currentAge.toStringAsFixed(0) : '');
@@ -58,7 +56,6 @@ class _SetGoalPageState extends ConsumerState<SetGoalPage> {
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
     _mobileCtrl.dispose();
     _ageCtrl.dispose();
     _sipCtrl.dispose();
@@ -73,7 +70,6 @@ class _SetGoalPageState extends ConsumerState<SetGoalPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final profile = FinancialProfile(
-      name: _nameCtrl.text.trim(),
       mobileNo: _mobileCtrl.text.trim(),
       currentAge: double.tryParse(_ageCtrl.text) ?? 30,
       monthlySIP: double.tryParse(_sipCtrl.text) ?? 0,
@@ -237,16 +233,6 @@ class _SetGoalPageState extends ConsumerState<SetGoalPage> {
     return LayoutBuilder(builder: (context, constraints) {
       final isWide = constraints.maxWidth > 500;
       final fields = [
-        _LabeledField(
-          label: 'Name',
-          required: true,
-          child: _AppTextField(
-            controller: _nameCtrl,
-            hint: 'Full name',
-            validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-          ),
-        ),
         _LabeledField(
           label: 'Mobile No.',
           required: true,

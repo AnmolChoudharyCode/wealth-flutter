@@ -15,6 +15,33 @@ import '../../shared/providers/auth_provider.dart';
 import '../../shared/widgets/app_shell/app_shell.dart';
 import 'route_names.dart';
 
+/// Slide-from-right transition for full-screen push routes.
+Page<void> _slidePage(Widget child, GoRouterState state) =>
+    CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 280),
+      reverseTransitionDuration: const Duration(milliseconds: 250),
+      transitionsBuilder: (_, animation, _, child) =>
+          SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(1, 0),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+        child: child,
+      ),
+    );
+
+/// Fade transition for shell tab routes (no slide overlap).
+Page<void> _fadePage(Widget child, GoRouterState state) =>
+    CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 200),
+      transitionsBuilder: (_, animation, _, child) =>
+          FadeTransition(opacity: animation, child: child),
+    );
+
 /// Bridges Riverpod auth state to GoRouter's refreshListenable.
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
@@ -58,24 +85,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // ── Public routes (no shell) ──────────────────────────────────────────
       GoRoute(
         path: RouteNames.splash,
-        builder: (_, _) => const SplashPage(),
+        pageBuilder: (_, s) => _fadePage(const SplashPage(), s),
       ),
       GoRoute(
         path: RouteNames.login,
-        builder: (_, _) => const LoginPage(),
+        pageBuilder: (_, s) => _slidePage(const LoginPage(), s),
       ),
       GoRoute(
         path: RouteNames.register,
-        builder: (_, _) => const RegisterPage(),
+        pageBuilder: (_, s) => _slidePage(const RegisterPage(), s),
       ),
       GoRoute(
         path: RouteNames.forgotPassword,
-        builder: (_, _) => const ForgotPasswordPage(),
+        pageBuilder: (_, s) => _slidePage(const ForgotPasswordPage(), s),
       ),
       // ── Full-screen authenticated routes (no shell) ───────────────────────
       GoRoute(
         path: RouteNames.setGoal,
-        builder: (_, _) => const SetGoalPage(),
+        pageBuilder: (_, s) => _slidePage(const SetGoalPage(), s),
       ),
       // ── Authenticated routes (wrapped in AppShell) ────────────────────────
       ShellRoute(
@@ -83,23 +110,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: RouteNames.dashboard,
-            builder: (_, _) => const DashboardPage(),
+            pageBuilder: (_, s) => _fadePage(const DashboardPage(), s),
           ),
           GoRoute(
             path: RouteNames.portfolio,
-            builder: (_, _) => const PortfolioPage(),
+            pageBuilder: (_, s) => _fadePage(const PortfolioPage(), s),
           ),
           GoRoute(
             path: RouteNames.markets,
-            builder: (_, _) => const MarketsPage(),
+            pageBuilder: (_, s) => _fadePage(const MarketsPage(), s),
           ),
           GoRoute(
             path: RouteNames.goals,
-            builder: (_, _) => const GoalsPage(),
+            pageBuilder: (_, s) => _fadePage(const GoalsPage(), s),
           ),
           GoRoute(
             path: RouteNames.profile,
-            builder: (_, _) => const ProfilePage(),
+            pageBuilder: (_, s) => _fadePage(const ProfilePage(), s),
           ),
         ],
       ),
