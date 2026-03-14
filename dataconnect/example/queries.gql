@@ -1,0 +1,47 @@
+query listAllFinancialProducts @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  financialProducts {
+    id
+    name
+    description
+    type
+  }
+}
+
+query getFinancialProductById($id: ID!) @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  financialProduct(key: { id: $id }) {
+    id
+    name
+    description
+    type
+    minimumInvestment
+    annualInterestRate
+    term
+  }
+}
+
+query getUserAccounts @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  accounts(where: { userId: { eq_expr: "auth.uid" } }) {
+    id
+    accountNumber
+    balance
+    type
+    financialProduct {
+      id
+      name
+    }
+  }
+}
+
+mutation createAccount($financialProductId: ID!, $accountNumber: String!, $balance: Float!, $type: AccountType!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  account_insert(
+    data: {
+      financialProductId: $financialProductId
+      userId_expr: "auth.uid"
+      accountNumber: $accountNumber
+      balance: $balance
+      type: $type
+    }
+  ) {
+    id
+  }
+}

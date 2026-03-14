@@ -1,0 +1,50 @@
+type User @table {
+  displayName: String!
+  email: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  dateOfBirth: Date
+}
+
+type Asset @table {
+  user: User!
+  name: String!
+  assetType: String!
+  currency: String!
+  createdAt: Timestamp!
+  description: String
+  tickerSymbol: String
+}
+
+type Transaction @table {
+  user: User!
+  asset: Asset!
+  transactionType: String!
+  amount: Float!
+  transactionDate: Timestamp!
+  createdAt: Timestamp!
+  notes: String
+  quantity: Float
+}
+
+type Liability @table {
+  user: User!
+  name: String!
+  liabilityType: String!
+  amount: Float!
+  currency: String!
+  createdAt: Timestamp!
+  description: String
+  interestRate: Float
+  dueDate: Date
+}
+
+type Goal @table {
+  user: User!
+  name: String!
+  targetAmount: Float!
+  targetDate: Date!
+  createdAt: Timestamp!
+  description: String
+  currentProgress: Float
+}
